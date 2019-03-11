@@ -145,22 +145,6 @@ func printBytesInBinary(input []byte) {
 	fmt.Println()
 }
 
-func uint64ToBytes(input uint64) []byte {
-	var result []byte
-	var unit byte
-
-	for i := 63; i >= 0; i-- {
-		if input&(1<<uint(i)) > 0 {
-			unit = unit | (1 << uint(i%8))
-		}
-		if (unit != 0) && (i%8 == 0) {
-			result = append(result, unit)
-			unit = 0
-		}
-	}
-	return result
-}
-
 func setUnsignedBitfield(data []byte, offset, bits, value uint64) []byte {
 	value &= 0xFFFFFFFFFFFFFFFF >> (64 - bits)
 
@@ -362,9 +346,8 @@ func main() {
 				result = append(result, bitfieldGet(value, bits, offset, isSigned))
 			})
 			i = i + 3
-			continue
 		} else if c2 == "set" {
-			if i+1 >= len(command) || i+2 >= len(command) || i+3 > len(command) {
+			if i+1 >= len(command) || i+2 >= len(command) || i+3 >= len(command) {
 				fmt.Println("ERR syntax error")
 				syntaxError = true
 				break
@@ -412,9 +395,8 @@ func main() {
 				value = data
 			})
 			i = i + 4
-			continue
 		} else if c2 == "incrby" {
-			if i+1 >= len(command) || i+2 >= len(command) || i+3 > len(command) {
+			if i+1 >= len(command) || i+2 >= len(command) || i+3 >= len(command) {
 				fmt.Println("ERR syntax error")
 				syntaxError = true
 				break
@@ -467,7 +449,6 @@ func main() {
 				}
 			})
 			i = i + 4
-			continue
 		} else if c2 == "overflow" {
 			if i+1 >= len(command) {
 				fmt.Println("ERR syntax error")
@@ -484,7 +465,6 @@ func main() {
 				currentOverflowType = overflowType
 			})
 			i = i + 2
-			continue
 		} else {
 			fmt.Println("ERR syntax error")
 			syntaxError = true
